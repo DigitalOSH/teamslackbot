@@ -29,7 +29,7 @@ try:
 	print(payload['Slack Token'])
 	json.dumps(payload)
 	with open('dbconfig.conf', 'w') as f: f.write(json.dumps(payload))
-	db.rollback()
+	db.commit()
 except Exception as e:
 	print(e)
-	db.rollback()
+	db.commit()
