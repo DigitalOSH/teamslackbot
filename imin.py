@@ -16,10 +16,13 @@ def getdbconfig():
         dbinfo['user'] = dbconf['User']
         dbinfo['passwd'] = dbconf['Password']
         dbinfo['dbname'] = dbconf['DB Name']
+        dbinfo['slacktoken'] = dbconf['Slack Token']
+        print(dbinfo['slacktoken'])
     return dbinfo
 
 def getrealname(s):
-    r = requests.get("https://c0deblack.slack.com/api/users.list?token=xoxp-31639659425-64220377122-66383185553-5a62ab5390")
+    info = getdbconfig()
+    r = requests.get(info['slacktoken'])
     user = s
     userdump = json.loads(r.content)
     for member in userdump['members']:
@@ -29,15 +32,15 @@ def getrealname(s):
 
 def process_message(data):
      if data['text'].startswith("!imin"):
-        info = getdbconfig()
-        db = pymysql.connect(info['host'], info['user'], info['passwd'], info['dbname'])
-        cursor = db.cursor()
-        uid = ""
-        whosin = ""
-        username = str(data['user'])
-        realname = getrealname(username)
-        print(realname)
         try:
+            info = getdbconfig()
+            db = pymysql.connect(info['host'], info['user'], info['passwd'], info['dbname'])
+            cursor = db.cursor()
+            uid = ""
+            whosin = ""
+            username = str(data['user'])
+            realname = getrealname(username)
+            print(realname)
             sql = "SELECT * FROM games WHERE datetime > '%d' ORDER BY datetime ASC" % (time.time())
             cursor.execute(sql)
             results = cursor.fetchall()
