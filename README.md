@@ -6,5 +6,8 @@ TeamSlackBot is a collection of plugins for the python-rtmbot slackbot(https://g
 - Enter your python-rtmbot/Plugins folder<br/>
 - Perform `git pull https://github.com/Galtwise/teamslackbot.git`<br/>
 - Enter the teamslackbot folder<br/>
-- Run setup.py and follow all instructions<br/>
-- Start python-rtmbot
+- Run `setup.py --setup` and follow all instructions<br/>
+- Start python-rtmbot<br/>
+<br/>
+<b>Loading games into the database:</b><br/>
+- Run `loadgames.py --setup`</br>
