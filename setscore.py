@@ -16,6 +16,7 @@ def getdbconfig():
         dbinfo['user'] = dbconf['User']
         dbinfo['passwd'] = dbconf['Password']
         dbinfo['dbname'] = dbconf['DB Name']
+        dbinfo['team'] = dbconf['Team']
     return dbinfo
 
 
@@ -48,7 +49,6 @@ def process_message(data):
                 cursor.execute(sql)
                 results = cursor.fetchall()
                 results = results[0]
-                print(results)
                 #gametime = results[0]
                 gametime = time.strftime('%B %d, %-I:%M', time.localtime(int(float(results[0]))))
                 location = results[1]

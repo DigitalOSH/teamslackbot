@@ -32,7 +32,7 @@ def getrealname(s):
             return membername
 
 def process_message(data):
-     if data['text'].startswith("!imamaybe"):
+     if data['text'].startswith("!imamaybe") or data['text'].startswith("!immaybe"):
         try:
             info = getdbconfig()
             db = pymysql.connect(info['host'], info['user'], info['passwd'], info['dbname'])
