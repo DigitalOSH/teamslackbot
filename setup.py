@@ -20,7 +20,7 @@ else:
 		cursor.execute(sql)
 		sql = "USE %s" % (dbname)
 		cursor.execute(sql)
-		sql = "CREATE TABLE games (datetime varchar(30), location varchar(200), team1 varchar(50), team2 varchar(50), uid varchar(10), whosin varchar(9999), ourscore varchar(10), theirscore varchar(10), whosout varchar(999), whosamaybe varchar(999))"
+		sql = "CREATE TABLE games (datetime varchar(30), location varchar(200), team1 varchar(50), team2 varchar(50), uid varchar(10), whosin varchar(9999), ourscore integer, theirscore integer, whosout varchar(999), whosamaybe varchar(999))"
 		cursor.execute(sql)
 		print("Database Setup Complete")
 		slackteamURL = input("Slack team URL: https://")
