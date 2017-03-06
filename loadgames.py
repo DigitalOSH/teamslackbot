@@ -1,6 +1,7 @@
 import pymysql
 import requests
 import time
+from time import sleep
 import datetime
 import simplejson as json
 import sys
@@ -39,6 +40,8 @@ else:
 		raw = raw.replace(" - Spring GAME", "")
 		raw = raw.replace(" - Summer GAME", "")
 		raw = raw.replace(" - Fall GAME", "")
+		raw = raw.replace("\\\'","")
+		raw = raw.replace("'","")
 		raw = raw.replace("\\\,",",")
 		raw = raw.replace("\\'","")
 		raw = raw.split("BEGIN:VEVENT")
@@ -66,7 +69,14 @@ else:
 				team1 = teams[0]
 				team2 = teams[1]
 				location = game[6]
+				if uid in str(results):
+					sql = "UPDATE games SET datetime = '%s', location = '%s', team1 = '%s', team2 = '%s' WHERE uid = '%s'" % (dt, location, team1, team1, uid)
+					print('updated')
+					cursor.execute(sql)
+					db.commit()
 				if uid not in str(results):
+					print(datetime, location, team1, team2, uid)
+					sleep(1)
 					sql = "INSERT INTO games(datetime, location, team1, team2, uid) VALUES ('%s', '%s', '%s', '%s', '%s' )" % (dt, location, team1, team2, uid)
 					cursor.execute(sql)
 					db.commit()
