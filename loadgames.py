@@ -70,7 +70,7 @@ else:
 				team2 = teams[1]
 				location = game[6]
 				if uid in str(results):
-					sql = "UPDATE games SET datetime = '%s', location = '%s', team1 = '%s', team2 = '%s' WHERE uid = '%s'" % (dt, location, team1, team1, uid)
+					sql = "UPDATE games SET datetime = '%s', location = '%s', team1 = '%s', team2 = '%s' WHERE uid = '%s'" % (dt, location, team1, team2, uid)
 					print('updated')
 					cursor.execute(sql)
 					db.commit()
