@@ -43,7 +43,7 @@ def process_message(data):
                 whosin = "No one yet\n"
         except Exception as e:
             print(e)
-            outputs.append([data['channel'], "Something went wrong"])
+            outputs.append([data['channel'], "Something went wrong. Please make sure the next game has been posted"])
             #quit()
         try:
             payload = teams+"\nDate: "+gametime+"\nLocation: "+location+"\n*Players in for this game:*\n"+whosin +"*Maybes for this game:*\n"+whosamaybe
