@@ -3,10 +3,21 @@ import pymysql
 import datetime
 import time
 import os
+import linecache
+import sys
 import simplejson as json
 crontable = []
 outputs = []
 
+
+def printexception():
+    exc_type, exc_obj, tb = sys.exc_info()
+    f = tb.tb_frame
+    lineno = tb.tb_lineno
+    filename = f.f_code.co_filename
+    linecache.checkcache(filename)
+    line = linecache.getline(filename, lineno, f.f_globals)
+    print('EXCEPTION IN ({}, LINE {} "{}"): {}'.format(filename, lineno, line.strip(), exc_obj))
 
 
 def getdbconfig():
@@ -32,7 +43,11 @@ def process_message(data):
             sql = "SELECT * FROM games WHERE datetime < '%d' ORDER BY datetime ASC" % (time.time())
             cursor.execute(sql)
             allgames = cursor.fetchall()
+            allgamestring = str(allgames)
+            if teamname.lower() not in allgamestring.lower():
+                outputs.append([data['channel'], 'No matching games found'])
             for results in allgames:
+                print(results)
                 gametime = time.strftime('%B %d, %-I:%M', time.localtime(int(float(results[0]))))
                 location = results[1]
                 team1 = results[2]
@@ -45,9 +60,13 @@ def process_message(data):
                 ourscore = results[6]
                 if ourscore == None:
                     ourscore = ""
+                else:
+                    ourscore = str(ourscore)
                 theirscore = results[7]
                 if theirscore == None:
                     theirscore = ""
+                else:
+                    theirscore = str(theirscore)
                 if info['team'] in team1:
                     us = team1
                 else:
@@ -56,16 +75,16 @@ def process_message(data):
                     us = team2
                 else:
                     them = team2
+                mvp = str(results[10])
                 if teamname.lower() in teams.lower() or teamname == None:
                     if ourscore != "":
-                        payload = teams+"\nDate: "+gametime+"\nLocation: "+location+"\nUID: "+uid+"\n*Players in for this game:*\n"+whosin+"*Final Score*\n"+us+" - "+ourscore+" | "+them+" - "+theirscore+"\n-----------"
+                        payload = teams+"\nDate: "+gametime+"\nLocation: "+location+"\n*Players in for this game:*\n"+whosin+"*Final Score*\n"+us+" - "+ourscore+" | "+them+" - "+theirscore+"\n*MVP*\n"+mvp+"\n-----------"
                     else:
-                        payload = teams+"\nDate: "+gametime+"\nLocation: "+location+"\nUID: "+uid+"\n*Players in for this game:*\n"+whosin+"-----------"
+                        payload = teams+"\nDate: "+gametime+"\nLocation: "+location+"\n*Players in for this game:*\n"+whosin+"\n-----------"
                     payload = str(payload)
-                    print(payload)
                     outputs.append([data['channel'], payload])
         except Exception as e:
-            print(e)
-	    outputs.append([data['channel'], 'Sorry, that didn\'t work'])
+            printexception()
+            outputs.append([data['channel'], 'Sorry, that didn\'t work'])
         db.close()
         sys.exit
