@@ -26,6 +26,7 @@ else:
 	db = pymysql.connect(info['host'], info['user'], info['passwd'], info['dbname'])
 	cursor = db.cursor()
 	source = input("Your team's webcal URL: ")
+	source = source.replace('webcal', 'http')
 	r=requests.get(source, verify=False)
 	raw = str(r.content)
 	if "BEGIN" in raw:
@@ -64,6 +65,7 @@ else:
 				print(dt)
 				uid = game[2]
 				uid = str(uid[0:7])
+				print(uid)
 				teams = game[4]
 				teams = teams.split(" @ ")
 				team1 = teams[0]
@@ -75,8 +77,11 @@ else:
 					cursor.execute(sql)
 					db.commit()
 				if uid not in str(results):
-					print(datetime, location, team1, team2, uid)
-					sleep(1)
-					sql = "INSERT INTO games(datetime, location, team1, team2, uid) VALUES ('%s', '%s', '%s', '%s', '%s' )" % (dt, location, team1, team2, uid)
-					cursor.execute(sql)
-					db.commit()
+					try:
+						print(datetime, location, team1, team2, uid)
+						sleep(1)
+						sql = "INSERT INTO games(datetime, location, team1, team2, uid) VALUES ('%s', '%s', '%s', '%s', '%s' )" % (dt, location, team1, team2, uid)
+						cursor.execute(sql)
+						db.commit()
+					except Exception as e:
+						print(e)
