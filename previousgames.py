@@ -66,5 +66,6 @@ def process_message(data):
                     outputs.append([data['channel'], payload])
         except Exception as e:
             print(e)
+	    outputs.append([data['channel'], 'Sorry, that didn\'t work'
         db.close()
         sys.exit
